@@ -13,6 +13,8 @@ version = "0.0.1"
 node-api = ["napi", "napi-derive"]
 
 [dependencies]
+parcel_sourcemap = { git = "https://github.com/speedy-js/parcel-source-map", branch = "speedy" }
+rayon = "1.5.1"
 
 [dependencies.napi]
 optional = true
