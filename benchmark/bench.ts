@@ -1,0 +1,1 @@
+import { Suite } from 'benchmark'
