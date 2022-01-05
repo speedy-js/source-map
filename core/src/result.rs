@@ -60,3 +60,31 @@ impl From<serde_json::Error> for Error {
     )
   }
 }
+
+#[cfg(feature = "node-api")]
+impl From<Error> for napi::Error {
+  #[inline]
+  fn from(err: Error) -> Self {
+    let mut reason = String::from("[magic-string] ");
+
+    match err.error_type {
+      SourceMapErrorType::ParcelSourceMap => {
+        reason.push_str("Internal SourceMap Error");
+      }
+      SourceMapErrorType::UTF8 => {
+        reason.push_str("UTF8 Encoding Error");
+      }
+
+      SourceMapErrorType::SerdeSerialization => {
+        reason.push_str("JSON Serialization Error");
+      }
+    }
+
+    if let Some(r) = err.reason {
+      reason.push_str(", ");
+      reason.push_str(r.as_str());
+    }
+
+    napi::Error::new(napi::Status::GenericFailure, reason)
+  }
+}

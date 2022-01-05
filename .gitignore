@@ -14,7 +14,8 @@ Cargo.lock
 # Added by cargo
 /target
 
-
+# Log files
+*.log
 
 # Web
 node_modules

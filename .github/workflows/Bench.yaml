@@ -52,7 +52,7 @@ jobs:
           key: npm-cache-lint-node@14-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: 'Install dependencies'
-        run: pnpm install --frozen-lockfile --registry https://registry.npmjs.org
+        run: pnpm install --frozen-lockfile --registry https://registry.npm.taobao.org
 
       - name: Build
         run: |

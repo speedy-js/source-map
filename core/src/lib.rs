@@ -1,6 +1,8 @@
 #![deny(clippy::all)]
 
-use napi;
+#[cfg(feature = "node-api")]
+use napi_derive::napi;
+
 use parcel_sourcemap::SourceMap as PSourceMap;
 use rayon::prelude::*;
 
@@ -10,27 +12,18 @@ mod result;
 pub use raw_sourcemap::RawSourceMap;
 pub use result::*;
 
-#[cfg(feature = "node-api")]
-#[napi(object)]
 #[derive(Debug, Clone)]
 #[non_exhaustive]
 pub struct SourceMap {
   pub inner: PSourceMap,
 }
 
-#[cfg(not(feature = "node-api"))]
-#[napi(object)]
-#[derive(Debug, Clone)]
-#[non_exhaustive]
-pub struct SourceMap {
-  pub inner: PSourceMap,
-}
-
+#[derive(Debug)]
 pub struct VlqMap<'a> {
-  pub input: &'a [u8],
-  pub sources: Vec<&'static str>,
-  pub sources_content: Vec<&'static str>,
-  pub names: Vec<&'static str>,
+  pub mappings: &'a [u8],
+  pub sources: Vec<&'a str>,
+  pub sources_content: Vec<&'a str>,
+  pub names: Vec<&'a str>,
   pub line_offset: Option<i64>,
   pub column_offset: Option<i64>,
 }
@@ -38,21 +31,20 @@ pub struct VlqMap<'a> {
 #[cfg(feature = "node-api")]
 #[napi(object)]
 #[derive(Debug, Clone)]
-pub struct Vlq<'a> {
+pub struct Vlq {
   pub mappings: String,
-  pub names: &'a Vec<String>,
-  pub sources: &'a Vec<String>,
-  pub sources_content: &'a Vec<String>,
+  pub names: Vec<String>,
+  pub sources: Vec<String>,
+  pub sources_content: Vec<String>,
 }
 
 #[cfg(not(feature = "node-api"))]
-#[napi(object)]
 #[derive(Debug, Clone)]
-pub struct Vlq<'a> {
+pub struct Vlq {
   pub mappings: String,
-  pub names: &'a Vec<String>,
-  pub sources: &'a Vec<String>,
-  pub sources_content: &'a Vec<String>,
+  pub names: Vec<String>,
+  pub sources: Vec<String>,
+  pub sources_content: Vec<String>,
 }
 
 impl SourceMap {
@@ -77,7 +69,7 @@ impl SourceMap {
       .map(|vlq_map| {
         let mut sm = PSourceMap::new("");
         sm.add_vlq_map(
-          vlq_map.input,
+          vlq_map.mappings,
           vlq_map.sources.clone(),
           vlq_map.sources_content.clone(),
           vlq_map.names.clone(),
@@ -115,9 +107,9 @@ impl SourceMap {
 
     Ok(Vlq {
       mappings: String::from_utf8(vlq_output)?,
-      names: self.inner.get_names(),
-      sources: self.inner.get_sources(),
-      sources_content: self.inner.get_sources_content(),
+      names: self.inner.get_names().clone(),
+      sources: self.inner.get_sources().clone(),
+      sources_content: self.inner.get_sources_content().clone(),
     })
   }
 
@@ -156,7 +148,7 @@ macro_rules! merge_map {
 fn should_merge_map() {
   // let foo = () => "foo";
   let mut babel_transformed = VlqMap {
-    input: ";;AAAA,IAAIA,GAAG,GAAG,SAANA,GAAM;AAAA,SAAM,KAAN;AAAA,CAAV".as_bytes(),
+    mappings: ";;AAAA,IAAIA,GAAG,GAAG,SAANA,GAAM;AAAA,SAAM,KAAN;AAAA,CAAV".as_bytes(),
     sources: vec!["unknown"],
     sources_content: vec![r#"let foo = () => "foo";"#],
     names: vec!["foo"],
@@ -171,7 +163,7 @@ fn should_merge_map() {
   // };
 
   let mut minified = VlqMap {
-    input: "AAAA,aAEA,IAAIA,IAAM,WACR,MAAO".as_bytes(),
+    mappings: "AAAA,aAEA,IAAIA,IAAM,WACR,MAAO".as_bytes(),
     sources: vec!["0"],
     sources_content: vec![r#""use strict";\n\nvar foo = function foo() {\n  return "foo";\n};"#],
     names: vec!["foo"],
