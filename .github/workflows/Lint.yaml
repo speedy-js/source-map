@@ -40,7 +40,7 @@ jobs:
         run: pnpm install --frozen-lockfile --registry https://registry.npmjs.org
 
       - name: ESLint
-        run: pnpm lint
+        run: pnpm lint --dir node
 
       - name: Cargo fmt
         run: cargo fmt -- --check

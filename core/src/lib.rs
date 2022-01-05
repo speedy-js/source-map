@@ -1,61 +1,143 @@
 #![deny(clippy::all)]
 
+use napi;
+use parcel_sourcemap::SourceMap as PSourceMap;
 use rayon::prelude::*;
 
-use parcel_sourcemap::SourceMap as PSourceMap;
+mod raw_sourcemap;
+mod result;
 
-struct SourceMap {}
+pub use raw_sourcemap::RawSourceMap;
+pub use result::*;
 
-struct VlqMap<'a> {
-  input: &'a [u8],
-  sources: Vec<&'static str>,
-  sources_content: Vec<&'static str>,
-  names: Vec<&'static str>,
-  line_offset: Option<i64>,
-  column_offset: Option<i64>,
+#[cfg(feature = "node-api")]
+#[napi(object)]
+#[derive(Debug, Clone)]
+#[non_exhaustive]
+pub struct SourceMap {
+  pub inner: PSourceMap,
 }
 
-fn merge_maps(vlq_maps: &mut [&mut VlqMap]) -> PSourceMap {
-  let len = vlq_maps.len();
-  assert!(len > 0);
-
-  let mut parcel_sm = vlq_maps
-    .into_par_iter()
-    .map(|vlq_map| {
-      let mut sm = PSourceMap::new("");
-      sm.add_vlq_map(
-        &vlq_map.input,
-        vlq_map.sources.clone(),
-        vlq_map.sources_content.clone(),
-        vlq_map.names.clone(),
-        match vlq_map.line_offset {
-          Some(line_offset) => line_offset,
-          None => 0,
-        },
-        match vlq_map.column_offset {
-          Some(column_offset) => column_offset,
-          None => 0,
-        },
-      );
-      sm
-    })
-    .collect::<Vec<_>>();
-
-  if len == 1 {
-    return parcel_sm[0].clone();
-  };
-
-  let last = parcel_sm.last_mut().unwrap().clone();
-  let (source_maps, _) = parcel_sm.split_at_mut(len - 2);
-
-  source_maps
-    .into_iter()
-    .rfold(last, |mut prev_map, mut map| {
-      map.extends(&mut prev_map);
-      map.clone()
-    })
+#[cfg(not(feature = "node-api"))]
+#[napi(object)]
+#[derive(Debug, Clone)]
+#[non_exhaustive]
+pub struct SourceMap {
+  pub inner: PSourceMap,
 }
 
+pub struct VlqMap<'a> {
+  pub input: &'a [u8],
+  pub sources: Vec<&'static str>,
+  pub sources_content: Vec<&'static str>,
+  pub names: Vec<&'static str>,
+  pub line_offset: Option<i64>,
+  pub column_offset: Option<i64>,
+}
+
+#[cfg(feature = "node-api")]
+#[napi(object)]
+#[derive(Debug, Clone)]
+pub struct Vlq<'a> {
+  pub mappings: String,
+  pub names: &'a Vec<String>,
+  pub sources: &'a Vec<String>,
+  pub sources_content: &'a Vec<String>,
+}
+
+#[cfg(not(feature = "node-api"))]
+#[napi(object)]
+#[derive(Debug, Clone)]
+pub struct Vlq<'a> {
+  pub mappings: String,
+  pub names: &'a Vec<String>,
+  pub sources: &'a Vec<String>,
+  pub sources_content: &'a Vec<String>,
+}
+
+impl SourceMap {
+  pub fn new(parcel_sourcemap: PSourceMap) -> Self {
+    Self {
+      inner: parcel_sourcemap,
+    }
+  }
+
+  pub fn new_from_buffer(buf: &[u8]) -> Result<Self> {
+    Ok(Self {
+      inner: PSourceMap::from_buffer("/", buf)?,
+    })
+  }
+
+  pub fn merge_maps(vlq_maps: &mut [&mut VlqMap]) -> Result<Self> {
+    let len = vlq_maps.len();
+    assert!(len > 0);
+
+    let mut parcel_sm: Vec<PSourceMap> = vlq_maps
+      .into_par_iter()
+      .map(|vlq_map| {
+        let mut sm = PSourceMap::new("");
+        sm.add_vlq_map(
+          vlq_map.input,
+          vlq_map.sources.clone(),
+          vlq_map.sources_content.clone(),
+          vlq_map.names.clone(),
+          vlq_map.line_offset.unwrap_or(0),
+          vlq_map.column_offset.unwrap_or(0),
+        )?;
+        Ok(sm)
+      })
+      .collect::<Result<Vec<_>>>()?;
+
+    if len == 1 {
+      return Ok(SourceMap::new(parcel_sm[0].clone()));
+    };
+
+    let last = parcel_sm.last_mut().unwrap().clone();
+    let (source_maps, _) = parcel_sm.split_at_mut(len - 1);
+
+    let parcel_sourcemap = source_maps.iter_mut().try_rfold::<PSourceMap, fn(
+      PSourceMap,
+      &mut PSourceMap,
+    ) -> Result<PSourceMap>, Result<PSourceMap>>(
+      last,
+      |mut prev_map, map| {
+        map.extends(&mut prev_map)?;
+        Ok(map.clone())
+      },
+    )?;
+
+    Ok(Self::new(parcel_sourcemap))
+  }
+
+  pub fn to_vlq(&mut self) -> Result<Vlq> {
+    let mut vlq_output: Vec<u8> = vec![];
+    self.inner.write_vlq(&mut vlq_output)?;
+
+    Ok(Vlq {
+      mappings: String::from_utf8(vlq_output)?,
+      names: self.inner.get_names(),
+      sources: self.inner.get_sources(),
+      sources_content: self.inner.get_sources_content(),
+    })
+  }
+
+  pub fn to_map(&mut self) -> Result<RawSourceMap> {
+    let vlq_map = self.to_vlq()?;
+    Ok(RawSourceMap::new_from_vlq(&vlq_map))
+  }
+
+  pub fn to_comment(&mut self) -> Result<String> {
+    let raw_map = self.to_map()?;
+    raw_map.to_url()
+  }
+
+  pub fn to_string(&mut self) -> Result<String> {
+    let raw_map = self.to_map()?;
+    raw_map.to_string()
+  }
+}
+
+#[macro_export]
 macro_rules! merge_map {
   ($( $vlq_map: expr), *) => {
       {
@@ -65,7 +147,7 @@ macro_rules! merge_map {
             vlq_maps.push($vlq_map);
           )*
 
-          merge_maps(vlq_maps.as_mut_slice())
+          SourceMap::merge_maps(vlq_maps.as_mut_slice())
       }
   };
 }
@@ -98,16 +180,19 @@ fn should_merge_map() {
   };
   // "use strict";var foo=function(){return"foo"};
 
-  let mut result = merge_map!(&mut minified, &mut babel_transformed);
+  let mut result = merge_map!(&mut minified, &mut babel_transformed)
+    .unwrap()
+    .inner;
 
   let mut vlq_output: Vec<u8> = vec![];
-  result.write_vlq(&mut vlq_output);
+  assert!(result.write_vlq(&mut vlq_output).is_ok());
 
-  println!(
-    "mappings: {}, sources: {:#?}, sources_content: {:#?}, names: {:#?}",
-    String::from_utf8(vlq_output).expect(""),
-    result.get_sources(),
-    result.get_sources_content(),
-    result.get_names()
-  );
+  let mappings = result.get_mappings();
+
+  assert_eq!(mappings[0].generated_column, 0);
+  assert_eq!(mappings[0].generated_line, 0);
+  assert_eq!(mappings[1].generated_column, 13);
+  assert_eq!(mappings[1].original.unwrap().original_line, 0);
+  assert_eq!(mappings[1].original.unwrap().original_column, 0);
+  assert_eq!(mappings[1].original.unwrap().source, 1);
 }
