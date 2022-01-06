@@ -1,8 +1,6 @@
-#[macro_use]
-extern crate napi_derive;
-
 use napi::bindgen_prelude::*;
 use napi::Result;
+use napi_derive::napi;
 use rayon::prelude::*;
 use serde::Deserialize;
 
@@ -36,7 +34,7 @@ impl SourceMap {
       .map(|json| serde_json::from_str(json.as_str()).unwrap())
       .collect::<Vec<VlqMap>>();
 
-    let mut speedy_vlq = vlq_maps
+    let speedy_vlq: Vec<SpeedyVlqMap> = vlq_maps
       .iter()
       .map(|map| {
         let sources = map.sources.as_ref().map_or(Vec::new(), |s| {
@@ -63,18 +61,18 @@ impl SourceMap {
       .collect::<Vec<SpeedyVlqMap>>();
 
     Ok(SourceMap(SpeedySourceMap::merge_maps(
-      &mut speedy_vlq.iter_mut().collect::<Vec<_>>(),
+      speedy_vlq.iter().collect::<Vec<&SpeedyVlqMap>>().as_slice(),
     )?))
   }
 
   #[napi]
   pub fn to_comment(&mut self) -> Result<String> {
-    Ok(self.0.to_comment()?)
+    Ok(self.0.generate_comment()?)
   }
 
   #[napi]
   pub fn to_string(&mut self) -> Result<String> {
-    Ok(self.0.to_string()?)
+    Ok(self.0.generate_string()?)
   }
 
   #[napi(ts_return_type = "{

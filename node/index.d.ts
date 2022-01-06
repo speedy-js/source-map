@@ -9,12 +9,6 @@ export class ExternalObject<T> {
     [K: symbol]: T
   }
 }
-export interface Vlq {
-  mappings: string
-  names: Array<string>
-  sources: Array<string>
-  sourcesContent: Array<string>
-}
 export interface VlqMap {
   mappings: string
   sources?: Array<string> | undefined | null
