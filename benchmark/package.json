@@ -4,7 +4,9 @@
   "license": "MIT",
   "version": "0.0.0",
   "dependencies": {
-    "benchmark": "^2.1.4"
+    "@speedy-js/parcel-source-map": "^2.0.1",
+    "benchmark": "^2.1.4",
+    "terser": "^5.10.0"
   },
   "devDependencies": {
     "@types/benchmark": "^2.1.1"
