@@ -11,6 +11,7 @@ pub fn create_external<T>(value: T) -> External<T> {
 }
 
 #[napi]
+#[derive(Clone)]
 pub struct SourceMap(SpeedySourceMap);
 
 #[derive(Deserialize, Debug)]
@@ -27,6 +28,12 @@ pub struct VlqMap {
 
 #[napi]
 impl SourceMap {
+  /// Create Speedy SourceMap from external Sourcemap instance. It's useful when storing cache on Node.js side
+  #[napi(factory)]
+  pub fn new_from_external_sourcemap(external: External<&SpeedySourceMap>) -> Self {
+    Self((*external).clone())
+  }
+
   #[napi(factory, ts_args_type = "vlqMaps: Array<String | VlqMap>")]
   pub fn merge_maps(vlq_jsons: Vec<String>) -> Result<Self> {
     let vlq_maps = vlq_jsons
@@ -63,6 +70,12 @@ impl SourceMap {
     Ok(SourceMap(SpeedySourceMap::merge_maps(
       speedy_vlq.iter().collect::<Vec<&SpeedyVlqMap>>().as_slice(),
     )?))
+  }
+
+  /// Convert Speedy SourceMap to External Value which can be stored in Node.js side indefinitely and useful when making mapChains or any caches
+  #[napi]
+  pub fn to_external_sourcemap(&self) -> External<&SpeedySourceMap> {
+    create_external(&self.0)
   }
 
   #[napi]
