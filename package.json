@@ -23,6 +23,7 @@
     "test": "mocha -r @swc-node/register **/__tests__/**/*.spec.ts"
   },
   "devDependencies": {
+    "@ampproject/remapping": "^1.0.2",
     "@napi-rs/cli": "^2.0.0",
     "@swc-node/register": "^1.4.0",
     "@types/mocha": "^9.0.0",

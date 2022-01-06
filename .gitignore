@@ -24,3 +24,6 @@ dist
 
 # Node addon
 *.node
+
+# System
+.DS_Store
