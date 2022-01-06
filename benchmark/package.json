@@ -6,9 +6,11 @@
   "dependencies": {
     "@speedy-js/parcel-source-map": "^2.0.1",
     "benchmark": "^2.1.4",
+    "merge-source-map": "^1.1.0",
     "terser": "^5.10.0"
   },
   "devDependencies": {
+    "@ampproject/remapping": "^1.0.2",
     "@types/benchmark": "^2.1.1"
   }
 }

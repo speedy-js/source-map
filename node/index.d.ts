@@ -9,17 +9,6 @@ export class ExternalObject<T> {
     [K: symbol]: T
   }
 }
-export interface OriginalLocation {
-  originalLine: number
-  originalColumn: number
-  source: number
-  name?: number | undefined | null
-}
-export interface Mapping {
-  generatedLine: number
-  generatedColumn: number
-  original?: OriginalLocation | undefined | null
-}
 export interface VlqMap {
   mappings: string
   sources?: Array<string> | undefined | null
