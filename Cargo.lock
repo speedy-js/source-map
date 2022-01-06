@@ -283,17 +283,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "da32515d9f6e6e489d7bc9d84c71b060db7247dc035bbe44eac88cf87486d8d5"
 
 [[package]]
-name = "parcel_sourcemap"
-version = "2.0.0"
-source = "git+https://github.com/speedy-js/parcel-source-map?branch=speedy#280b961b4fd363bbf5de25a267b99b6f854eed65"
-dependencies = [
- "napi",
- "napi-derive",
- "rkyv 0.6.7",
- "vlq",
-]
-
-[[package]]
 name = "proc-macro2"
 version = "1.0.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -480,17 +469,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "speedy_parcel_sourcemap"
+version = "2.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8547b58c0b667e8cb0805e93f9b458cd347794167f04cfe4cadd80bb916f942d"
+dependencies = [
+ "napi",
+ "napi-derive",
+ "rkyv 0.6.7",
+ "vlq",
+]
+
+[[package]]
 name = "speedy_sourcemap"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "base64",
  "napi",
  "napi-derive",
- "parcel_sourcemap",
  "rayon",
  "rkyv 0.7.28",
  "serde",
  "serde_json",
+ "speedy_parcel_sourcemap",
 ]
 
 [[package]]

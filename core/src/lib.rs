@@ -1,7 +1,7 @@
 #![deny(clippy::all)]
 
-use parcel_sourcemap::SourceMap as PSourceMap;
 use rayon::prelude::*;
+use speedy_parcel_sourcemap::SourceMap as PSourceMap;
 
 mod raw_sourcemap;
 mod result;

@@ -5,7 +5,7 @@ edition = "2021"
 license = "MIT"
 name = "speedy_sourcemap"
 repository = "https://github.com/speedy-js/sourcemap"
-version = "0.0.1"
+version = "0.1.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -13,7 +13,7 @@ version = "0.0.1"
 node-api = ["napi", "napi-derive"]
 
 [dependencies]
-parcel_sourcemap = { git = "https://github.com/speedy-js/parcel-source-map", branch = "speedy", features = ["native"] }
+speedy_parcel_sourcemap = { version = "2.0.2" }
 rayon = "1.5.1"
 serde = {version = "1.0", features = ["derive"]}
 serde_json = "1.0"

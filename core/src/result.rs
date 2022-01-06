@@ -32,9 +32,9 @@ impl Error {
   }
 }
 
-impl From<parcel_sourcemap::SourceMapError> for Error {
+impl From<speedy_parcel_sourcemap::SourceMapError> for Error {
   #[inline]
-  fn from(err: parcel_sourcemap::SourceMapError) -> Self {
+  fn from(err: speedy_parcel_sourcemap::SourceMapError) -> Self {
     match err.reason {
       Some(r) => Error::new_with_reason(SourceMapErrorType::ParcelSourceMap, r.as_str()),
       None => Error::new(SourceMapErrorType::ParcelSourceMap),
