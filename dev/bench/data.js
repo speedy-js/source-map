@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1641446086860,
+  "lastUpdate": 1641446093790,
   "repoUrl": "https://github.com/speedy-js/source-map",
   "entries": {
     "Benchmark": [
@@ -96,6 +96,68 @@ window.BENCHMARK_DATA = {
             "range": "±6.67%",
             "unit": "ops/sec",
             "extra": "11 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "speedy-js",
+            "username": "speedy-js"
+          },
+          "committer": {
+            "name": "speedy-js",
+            "username": "speedy-js"
+          },
+          "id": "56518916916c41c0390e34d9c8cd0a7a1b83b7e7",
+          "message": "feat(core): basic impl",
+          "timestamp": "2022-01-04T09:32:35Z",
+          "url": "https://github.com/speedy-js/source-map/pull/1/commits/56518916916c41c0390e34d9c8cd0a7a1b83b7e7"
+        },
+        "date": 1641446092795,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "lottie#@speedy-js/source-map - parallel",
+            "value": 65.08,
+            "range": "±1.13%",
+            "unit": "ops/sec",
+            "extra": "67 samples"
+          },
+          {
+            "name": "antd#@speedy-js/source-map  - parallel",
+            "value": 6.85,
+            "range": "±0.77%",
+            "unit": "ops/sec",
+            "extra": "21 samples"
+          },
+          {
+            "name": "antd#@speedy-js/remapping",
+            "value": 4.91,
+            "range": "±0.56%",
+            "unit": "ops/sec",
+            "extra": "23 samples"
+          },
+          {
+            "name": "antd@ampremapping",
+            "value": 2.34,
+            "range": "±7.41%",
+            "unit": "ops/sec",
+            "extra": "10 samples"
+          },
+          {
+            "name": "lottie#@speedy-js/remapping",
+            "value": 36.64,
+            "range": "±0.55%",
+            "unit": "ops/sec",
+            "extra": "23 samples"
+          },
+          {
+            "name": "lottie#@ampremapping",
+            "value": 15.98,
+            "range": "±5.03%",
+            "unit": "ops/sec",
+            "extra": "30 samples"
           }
         ]
       }
