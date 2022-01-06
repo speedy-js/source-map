@@ -16,6 +16,7 @@ pub use result::*;
 #[non_exhaustive]
 pub struct SourceMap {
   pub inner: PSourceMap,
+  vlq: Option<Vlq>,
 }
 
 #[derive(Debug)]
@@ -51,12 +52,14 @@ impl SourceMap {
   pub fn new(parcel_sourcemap: PSourceMap) -> Self {
     Self {
       inner: parcel_sourcemap,
+      vlq: None,
     }
   }
 
   pub fn new_from_buffer(buf: &[u8]) -> Result<Self> {
     Ok(Self {
       inner: PSourceMap::from_buffer("/", buf)?,
+      vlq: None,
     })
   }
 
@@ -64,58 +67,60 @@ impl SourceMap {
     let len = vlq_maps.len();
     assert!(len > 0);
 
-    let mut parcel_sm: Vec<PSourceMap> = vlq_maps
+    let mut parcel_sm: Vec<Option<PSourceMap>> = vlq_maps
       .into_par_iter()
       .map(|vlq_map| {
         let mut sm = PSourceMap::new("");
         sm.add_vlq_map(
           vlq_map.mappings,
-          vlq_map.sources.clone(),
-          vlq_map.sources_content.clone(),
-          vlq_map.names.clone(),
+          vlq_map.sources.to_vec(),
+          vlq_map.sources_content.to_vec(),
+          vlq_map.names.to_vec(),
           vlq_map.line_offset.unwrap_or(0),
           vlq_map.column_offset.unwrap_or(0),
         )?;
-        Ok(sm)
+        Ok(Some(sm))
       })
       .collect::<Result<Vec<_>>>()?;
 
     if len == 1 {
-      return Ok(SourceMap::new(parcel_sm[0].clone()));
+      return Ok(SourceMap::new(parcel_sm[0].take().unwrap()));
     };
 
-    let last = parcel_sm.last_mut().unwrap().clone();
+    let last = parcel_sm.last_mut().unwrap().take().unwrap();
     let (source_maps, _) = parcel_sm.split_at_mut(len - 1);
 
     let parcel_sourcemap = source_maps.iter_mut().try_rfold::<PSourceMap, fn(
       PSourceMap,
-      &mut PSourceMap,
+      &mut Option<PSourceMap>,
     ) -> Result<PSourceMap>, Result<PSourceMap>>(
       last,
       |mut prev_map, map| {
-        map.extends(&mut prev_map)?;
-        Ok(map.clone())
+        map.as_mut().unwrap().extends(&mut prev_map)?;
+        Ok(map.take().unwrap())
       },
     )?;
 
     Ok(Self::new(parcel_sourcemap))
   }
 
-  pub fn to_vlq(&mut self) -> Result<Vlq> {
+  pub fn to_vlq(&mut self) -> Result<&Vlq> {
     let mut vlq_output: Vec<u8> = vec![];
     self.inner.write_vlq(&mut vlq_output)?;
 
-    Ok(Vlq {
+    self.vlq = Some(Vlq {
       mappings: String::from_utf8(vlq_output)?,
       names: self.inner.get_names().clone(),
       sources: self.inner.get_sources().clone(),
       sources_content: self.inner.get_sources_content().clone(),
-    })
+    });
+
+    Ok(self.vlq.as_ref().unwrap())
   }
 
   pub fn to_map(&mut self) -> Result<RawSourceMap> {
     let vlq_map = self.to_vlq()?;
-    Ok(RawSourceMap::new_from_vlq(&vlq_map))
+    Ok(RawSourceMap::new_from_vlq(vlq_map))
   }
 
   pub fn to_comment(&mut self) -> Result<String> {

@@ -37,18 +37,18 @@ impl SourceMap {
       .collect::<Vec<VlqMap>>();
 
     let mut speedy_vlq = vlq_maps
-      .par_iter()
+      .iter()
       .map(|map| {
         let sources = map.sources.as_ref().map_or(Vec::new(), |s| {
-          s.par_iter().map(|s| s.as_str()).collect::<Vec<_>>()
+          s.iter().map(|s| s.as_str()).collect::<Vec<_>>()
         });
 
         let sources_content = map.sources_content.as_ref().map_or(Vec::new(), |s| {
-          s.par_iter().map(|s| s.as_str()).collect::<Vec<_>>()
+          s.iter().map(|s| s.as_str()).collect::<Vec<_>>()
         });
 
         let names = map.names.as_ref().map_or(Vec::new(), |s| {
-          s.par_iter().map(|s| s.as_str()).collect::<Vec<_>>()
+          s.iter().map(|s| s.as_str()).collect::<Vec<_>>()
         });
 
         SpeedyVlqMap {

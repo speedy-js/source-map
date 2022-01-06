@@ -46,18 +46,16 @@ impl RawSourceMap {
     Self {
       version: VERSION,
       mappings: vlq.mappings.clone(),
-      names: vlq.names.clone(),
+      names: vlq.names.iter().map(|s| s.to_owned()).collect::<Vec<_>>(),
       sources: vlq
         .sources
-        .clone()
         .iter()
-        .map(|source| Some(source.into()))
+        .map(|source| Some(source.to_owned()))
         .collect::<Vec<_>>(),
       sources_content: vlq
         .sources_content
-        .clone()
         .iter()
-        .map(|sc| Some(sc.into()))
+        .map(|sc| Some(sc.to_owned()))
         .collect::<Vec<_>>(),
       file: None,
       source_root: None,

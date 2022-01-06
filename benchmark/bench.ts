@@ -20,26 +20,29 @@ const bench1 = (async () => {
     const transformedMap = fs.readFileSync(path.resolve(__dirname, './fixtures/lottie/lottie.es.js.map'), 'utf8');
     const minifiedMap = fs.readFileSync(path.resolve(__dirname, "./fixtures/lottie/lottie.es.min.js.map"), 'utf-8');
 
-    suite
-        .add('lottie#@speedy-js/source-map - parallel', () => {
-            SourceMap.mergeMaps([minifiedMap, transformedMap])
-        })
-        .add(
-            'lottie#@speedy-js/remapping',
-            asyncTest(async () => {
-                await remapping([minifiedMap, transformedMap]);
+    return new Promise(res => {
+        suite
+            .add('lottie#@speedy-js/source-map - parallel', () => {
+                SourceMap.mergeMaps([minifiedMap, transformedMap])
             })
-        )
-        .add('lottie#@ampremapping', () => {
-            ampremapping([minifiedMap, transformedMap], () => null)
-        })
-        .on('cycle', function (event: Event) {
-            console.info(String(event.target));
-        })
-        .on('complete', function (this: any) {
-            console.info(`${this.name} bench suite: Fastest is ${chalk.green(this.filter('fastest').map('name'))}\n\n`);
-        })
-        .run();
+            .add(
+                'lottie#@speedy-js/remapping',
+                asyncTest(async () => {
+                    await remapping([minifiedMap, transformedMap]);
+                })
+            )
+            .add('lottie#@ampremapping', () => {
+                ampremapping([minifiedMap, transformedMap], () => null)
+            })
+            .on('cycle', function (event: Event) {
+                console.info(String(event.target));
+            })
+            .on('complete', function (this: any) {
+                console.info(`${this.name} bench suite: Fastest is ${chalk.green(this.filter('fastest').map('name'))}\n\n`);
+                res()
+            })
+            .run();
+    })
 });
 
 const bench2 = (async () => {
@@ -47,26 +50,29 @@ const bench2 = (async () => {
     const transformedMap = fs.readFileSync(path.resolve(__dirname, './fixtures/antd/antd.js.map'), 'utf8');
     const minifiedMap = fs.readFileSync(path.resolve(__dirname, "./fixtures/antd/antd.min.js.map"), 'utf-8');
 
-    suite
-        .add('antd#@speedy-js/source-map  - parallel', () => {
-            SourceMap.mergeMaps([minifiedMap, transformedMap])
-        })
-        .add(
-            'antd#@speedy-js/remapping',
-            asyncTest(async () => {
-                await remapping([minifiedMap, transformedMap]);
+    return new Promise(res => {
+        suite
+            .add('antd#@speedy-js/source-map  - parallel', () => {
+                SourceMap.mergeMaps([minifiedMap, transformedMap])
             })
-        )
-        .add('antd@ampremapping', () => {
-            ampremapping([minifiedMap, transformedMap], () => null)
-        })
-        .on('cycle', function (event: Event) {
-            console.info(String(event.target));
-        })
-        .on('complete', function (this: any) {
-            console.info(`${this.name} bench suite: Fastest is ${chalk.green(this.filter('fastest').map('name'))}\n\n`);
-        })
-        .run();
+            .add(
+                'antd#@speedy-js/remapping',
+                asyncTest(async () => {
+                    await remapping([minifiedMap, transformedMap]);
+                })
+            )
+            .add('antd@ampremapping', () => {
+                ampremapping([minifiedMap, transformedMap], () => null)
+            })
+            .on('cycle', function (event: Event) {
+                console.info(String(event.target));
+            })
+            .on('complete', function (this: any) {
+                console.info(`${this.name} bench suite: Fastest is ${chalk.green(this.filter('fastest').map('name'))}\n\n`);
+                res()
+            })
+            .run();
+    })
 });
 
 (async () => {
