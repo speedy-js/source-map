@@ -65,7 +65,7 @@ impl From<serde_json::Error> for Error {
 impl From<Error> for napi::Error {
   #[inline]
   fn from(err: Error) -> Self {
-    let mut reason = String::from("[magic-string] ");
+    let mut reason = String::from("[Speedy-SourceMap] ");
 
     match err.error_type {
       SourceMapErrorType::ParcelSourceMap => {
