@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1641530063291,
+  "lastUpdate": 1641547349268,
   "repoUrl": "https://github.com/speedy-js/source-map",
   "entries": {
     "Benchmark": [
@@ -866,6 +866,82 @@ window.BENCHMARK_DATA = {
             "name": "antd#merge-source-map",
             "value": 0.82,
             "range": "±2.29%",
+            "unit": "ops/sec",
+            "extra": "7 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "speedy-js",
+            "username": "speedy-js"
+          },
+          "committer": {
+            "name": "speedy-js",
+            "username": "speedy-js"
+          },
+          "id": "a31cabdb413a30876bb71f73cd536a4215feb2bd",
+          "message": "fix: fix comment generation",
+          "timestamp": "2022-01-07T08:37:46Z",
+          "url": "https://github.com/speedy-js/source-map/pull/4/commits/a31cabdb413a30876bb71f73cd536a4215feb2bd"
+        },
+        "date": 1641547348166,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "lottie#@speedy-js/source-map - parallel",
+            "value": 87.37,
+            "range": "±4.20%",
+            "unit": "ops/sec",
+            "extra": "74 samples"
+          },
+          {
+            "name": "lottie#@speedy-js/remapping",
+            "value": 43.37,
+            "range": "±0.34%",
+            "unit": "ops/sec",
+            "extra": "69 samples"
+          },
+          {
+            "name": "lottie#@ampremapping",
+            "value": 22.63,
+            "range": "±7.02%",
+            "unit": "ops/sec",
+            "extra": "43 samples"
+          },
+          {
+            "name": "lottie#merge-source-map",
+            "value": 4.15,
+            "range": "±2.72%",
+            "unit": "ops/sec",
+            "extra": "15 samples"
+          },
+          {
+            "name": "antd#@speedy-js/source-map  - parallel",
+            "value": 8.48,
+            "range": "±1.22%",
+            "unit": "ops/sec",
+            "extra": "25 samples"
+          },
+          {
+            "name": "antd#@speedy-js/remapping",
+            "value": 5.94,
+            "range": "±0.40%",
+            "unit": "ops/sec",
+            "extra": "33 samples"
+          },
+          {
+            "name": "antd@ampremapping",
+            "value": 2.89,
+            "range": "±4.86%",
+            "unit": "ops/sec",
+            "extra": "12 samples"
+          },
+          {
+            "name": "antd#merge-source-map",
+            "value": 0.89,
+            "range": "±3.04%",
             "unit": "ops/sec",
             "extra": "7 samples"
           }
