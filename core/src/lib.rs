@@ -35,8 +35,16 @@ pub struct Vlq {
 }
 
 impl SourceMap {
+  /// Create a new Speedy SourceMap instance
+  pub fn new(source_root: &str) -> Self {
+    Self {
+      inner: PSourceMap::new(source_root),
+      vlq: None,
+    }
+  }
+
   /// Create a new Speedy SourceMap instance directly from Parcel SourceMap
-  pub fn new(parcel_sourcemap: PSourceMap) -> Self {
+  pub fn new_from_parcel_sourcemap(parcel_sourcemap: PSourceMap) -> Self {
     Self {
       inner: parcel_sourcemap,
       vlq: None,
@@ -73,7 +81,9 @@ impl SourceMap {
       .collect::<Result<Vec<_>>>()?;
 
     if len == 1 {
-      return Ok(SourceMap::new(parcel_sm[0].take().unwrap()));
+      return Ok(Self::new_from_parcel_sourcemap(
+        parcel_sm[0].take().unwrap(),
+      ));
     };
 
     let last = parcel_sm.last_mut().unwrap().take().unwrap();
@@ -90,7 +100,7 @@ impl SourceMap {
       },
     )?;
 
-    Ok(Self::new(parcel_sourcemap))
+    Ok(Self::new_from_parcel_sourcemap(parcel_sourcemap))
   }
 
   pub fn generate_vlq(&mut self) -> Result<&Vlq> {

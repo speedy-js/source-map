@@ -18,7 +18,13 @@ export interface VlqMap {
   columnOffset?: number | undefined | null
 }
 export class SourceMap {
+  /** Create Speedy SourceMap from external Sourcemap instance. It's useful when storing cache on Node.js side */
+  static newFromExternalSourcemap(
+    external: ExternalObject<SpeedySourceMap>,
+  ): SourceMap
   static mergeMaps(vlqMaps: Array<String | VlqMap>): SourceMap
+  /** Convert Speedy SourceMap to External Value which can be stored in Node.js side indefinitely and useful when making mapChains or any caches */
+  toExternalSourcemap(): ExternalObject<SpeedySourceMap>
   toComment(): string
   toString(): string
   toMap(): {
