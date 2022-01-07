@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1641560325122,
+  "lastUpdate": 1641560406755,
   "repoUrl": "https://github.com/speedy-js/source-map",
   "entries": {
     "Benchmark": [
@@ -1314,6 +1314,142 @@ window.BENCHMARK_DATA = {
             "name": "lottie#merge-source-map",
             "value": 4.07,
             "range": "±3.03%",
+            "unit": "ops/sec",
+            "extra": "15 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "andywangsy@gmail.com",
+            "name": "Hana",
+            "username": "h-a-n-a"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e0a4732ed153a945106df547581fe1714ab7e70e",
+          "message": "Fix/cater for nullables (#5)\n\n* fix(node): cater for nullable values\r\n\r\n* chore(bench): add more benchmarks",
+          "timestamp": "2022-01-07T20:56:14+08:00",
+          "tree_id": "51b4341aba83a440ed63081fffb8e6385f38345b",
+          "url": "https://github.com/speedy-js/source-map/commit/e0a4732ed153a945106df547581fe1714ab7e70e"
+        },
+        "date": 1641560403963,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "lottie#@speedy-js/source-map - parallel",
+            "value": 91.78,
+            "range": "±0.66%",
+            "unit": "ops/sec",
+            "extra": "77 samples"
+          },
+          {
+            "name": "lottie#@speedy-js/remapping",
+            "value": 45.79,
+            "range": "±1.31%",
+            "unit": "ops/sec",
+            "extra": "72 samples"
+          },
+          {
+            "name": "lottie#@ampremapping",
+            "value": 22.81,
+            "range": "±6.88%",
+            "unit": "ops/sec",
+            "extra": "43 samples"
+          },
+          {
+            "name": "lottie#merge-source-map",
+            "value": 4.22,
+            "range": "±4.22%",
+            "unit": "ops/sec",
+            "extra": "15 samples"
+          },
+          {
+            "name": "antd#@speedy-js/source-map  - parallel",
+            "value": 8.76,
+            "range": "±2.39%",
+            "unit": "ops/sec",
+            "extra": "26 samples"
+          },
+          {
+            "name": "antd#@speedy-js/remapping",
+            "value": 5.9,
+            "range": "±0.30%",
+            "unit": "ops/sec",
+            "extra": "32 samples"
+          },
+          {
+            "name": "antd@ampremapping",
+            "value": 2.98,
+            "range": "±6.69%",
+            "unit": "ops/sec",
+            "extra": "12 samples"
+          },
+          {
+            "name": "antd#merge-source-map",
+            "value": 0.96,
+            "range": "±4.37%",
+            "unit": "ops/sec",
+            "extra": "7 samples"
+          },
+          {
+            "name": "lottie#@speedy-js/source-map - parallel",
+            "value": 64.13,
+            "range": "±0.87%",
+            "unit": "ops/sec",
+            "extra": "66 samples"
+          },
+          {
+            "name": "lottie#@speedy-js/remapping",
+            "value": 33.78,
+            "range": "±1.23%",
+            "unit": "ops/sec",
+            "extra": "80 samples"
+          },
+          {
+            "name": "lottie#@ampremapping",
+            "value": 20.68,
+            "range": "±7.17%",
+            "unit": "ops/sec",
+            "extra": "40 samples"
+          },
+          {
+            "name": "lottie#merge-source-map",
+            "value": 4.25,
+            "range": "±2.54%",
+            "unit": "ops/sec",
+            "extra": "15 samples"
+          },
+          {
+            "name": "lottie#@speedy-js/source-map - parallel",
+            "value": 55.03,
+            "range": "±1.35%",
+            "unit": "ops/sec",
+            "extra": "71 samples"
+          },
+          {
+            "name": "lottie#@speedy-js/remapping",
+            "value": 36.18,
+            "range": "±0.62%",
+            "unit": "ops/sec",
+            "extra": "60 samples"
+          },
+          {
+            "name": "lottie#@ampremapping",
+            "value": 23.5,
+            "range": "±4.95%",
+            "unit": "ops/sec",
+            "extra": "43 samples"
+          },
+          {
+            "name": "lottie#merge-source-map",
+            "value": 4.17,
+            "range": "±3.69%",
             "unit": "ops/sec",
             "extra": "15 samples"
           }
