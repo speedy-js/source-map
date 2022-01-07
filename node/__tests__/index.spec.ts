@@ -19,9 +19,12 @@ describe('merge', () => {
         names: ['foo'],
       },
     ])
-    console.log(sourcemap.toComment())
-    console.log(sourcemap.toString())
-    console.log(sourcemap.toMap())
+    const map = sourcemap.toMap()
+
+    assert.equal(map.version, 3)
+
+    assert.ok(sourcemap.toComment().startsWith("//# sourceMappingURL="))
+    assert.ok(sourcemap.toUrl().startsWith("data:application/json;charset=utf-8;base64,"))
   })
 })
 

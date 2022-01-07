@@ -25,6 +25,7 @@ export class SourceMap {
   static mergeMaps(vlqMaps: Array<String | VlqMap>): SourceMap
   /** Convert Speedy SourceMap to External Value which can be stored in Node.js side indefinitely and useful when making mapChains or any caches */
   toExternalSourcemap(): ExternalObject<SpeedySourceMap>
+  toUrl(): string
   toComment(): string
   toString(): string
   toMap(): {

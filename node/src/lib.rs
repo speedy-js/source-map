@@ -79,8 +79,14 @@ impl SourceMap {
   }
 
   #[napi]
-  pub fn to_comment(&mut self) -> Result<String> {
-    Ok(self.0.generate_comment()?)
+  pub fn to_url(&mut self) -> Result<String> {
+    Ok(self.0.generate_url()?)
+  }
+
+  #[napi(ts_return_type = string)]
+  pub fn to_comment(&self) -> Result<()> {
+    // only for .d.ts declaration generation
+    Ok(())
   }
 
   #[napi]

@@ -122,7 +122,7 @@ impl SourceMap {
     Ok(RawSourceMap::new_from_vlq(vlq_map))
   }
 
-  pub fn generate_comment(&mut self) -> Result<String> {
+  pub fn generate_url(&mut self) -> Result<String> {
     let raw_map = self.generate_map()?;
     raw_map.to_url()
   }
