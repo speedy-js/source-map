@@ -11,8 +11,8 @@ export class ExternalObject<T> {
 }
 export interface VlqMap {
   mappings: string
-  sources?: Array<string> | undefined | null
-  sourcesContent?: Array<string> | undefined | null
+  sources?: Array<string | undefined | null> | undefined | null
+  sourcesContent?: Array<string | undefined | null> | undefined | null
   names?: Array<string> | undefined | null
   lineOffset?: number | undefined | null
   columnOffset?: number | undefined | null

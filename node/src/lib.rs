@@ -19,11 +19,19 @@ pub struct SourceMap(SpeedySourceMap);
 #[napi(object)]
 pub struct VlqMap {
   pub mappings: String,
-  pub sources: Option<Vec<String>>,
-  pub sources_content: Option<Vec<String>>,
+  pub sources: Option<Vec<Option<String>>>,
+  pub sources_content: Option<Vec<Option<String>>>,
   pub names: Option<Vec<String>>,
   pub line_offset: Option<i64>,
   pub column_offset: Option<i64>,
+}
+
+fn convert_option_vec(s: &Option<Vec<Option<String>>>) -> Vec<&str> {
+  s.as_ref().map_or(Vec::new(), |s| {
+    s.iter()
+      .map(|s| s.as_deref().unwrap_or_default())
+      .collect::<Vec<_>>()
+  })
 }
 
 #[napi]
@@ -44,13 +52,9 @@ impl SourceMap {
     let speedy_vlq: Vec<SpeedyVlqMap> = vlq_maps
       .iter()
       .map(|map| {
-        let sources = map.sources.as_ref().map_or(Vec::new(), |s| {
-          s.iter().map(|s| s.as_str()).collect::<Vec<_>>()
-        });
+        let sources = convert_option_vec(&map.sources);
 
-        let sources_content = map.sources_content.as_ref().map_or(Vec::new(), |s| {
-          s.iter().map(|s| s.as_str()).collect::<Vec<_>>()
-        });
+        let sources_content = convert_option_vec(&map.sources_content);
 
         let names = map.names.as_ref().map_or(Vec::new(), |s| {
           s.iter().map(|s| s.as_str()).collect::<Vec<_>>()
