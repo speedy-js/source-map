@@ -1,5 +1,3 @@
-<br />
-
 <h1>Speedy SourceMap</h1>
 
 
@@ -8,6 +6,10 @@
 <a href="https://crates.io/crates/speedy_sourcemap"><img src="https://img.shields.io/crates/v/speedy_sourcemap.svg?label=crates" alt="crates"></a>
 <a href="https://www.npmjs.com/package/@speedy-js/source-map"><img src="https://img.shields.io/npm/v/@speedy-js/source-map?color=666&amp;label=NPM" alt="NPM version"></a>
 </p>
+
+SourceMap kit for SpeedyStack
+
+> SourceMap is under heavy development, API might change in the future. DO NOT use it in the production.
 
 ## Benchmark
 
