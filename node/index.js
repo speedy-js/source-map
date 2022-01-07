@@ -8,12 +8,21 @@ class SpeedySourceMap extends SourceMap {
     toMap() {
         return JSON.parse(super.toString())
     }
+    toComment() {
+        return '//# sourceMappingURL=' + super.toUrl()
+    }
     static mergeMaps(vlqMaps) {
         const instance = SourceMap.mergeMaps(vlqMaps.map(map => ensureMap(map)))
 
-        return Object.defineProperty(instance, "toMap", {
+        Object.defineProperty(instance, "toMap", {
             value: SpeedySourceMap.prototype.toMap.bind(instance)
         })
+
+        Object.defineProperty(instance, "toComment", {
+            value: SpeedySourceMap.prototype.toComment.bind(instance)
+        })
+
+        return instance
     }
 }
 
