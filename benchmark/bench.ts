@@ -102,6 +102,92 @@ const bench2 = async () => {
   })
 }
 
+const bench3 = async () => {
+  const suite = new Suite('mergeMap.toString#lottie')
+  const transformedMap = fs.readFileSync(
+      path.resolve(__dirname, './fixtures/lottie/lottie.es.js.map'),
+      'utf-8',
+  )
+  const minifiedMap = fs.readFileSync(
+      path.resolve(__dirname, './fixtures/lottie/lottie.es.min.js.map'),
+      'utf-8',
+  )
+
+  return new Promise<void>((res) => {
+    suite
+        .add('lottie#@speedy-js/source-map - parallel', () => {
+          SourceMap.mergeMaps([minifiedMap, transformedMap]).toString()
+        })
+        .add(
+            'lottie#@speedy-js/remapping',
+            asyncTest(async () => {
+              await remapping([minifiedMap, transformedMap]).toString()
+            }),
+        )
+        .add('lottie#@ampremapping', () => {
+          ampremapping([minifiedMap, transformedMap], () => null).toString()
+        })
+        .add('lottie#merge-source-map', () => {
+          mergeSourceMap(transformedMap, minifiedMap).toString()
+        })
+        .on('cycle', function (event: Event) {
+          console.info(String(event.target))
+        })
+        .on('complete', function (this: any) {
+          console.info(
+              `${this.name} bench suite: Fastest is ${chalk.green(
+                  this.filter('fastest').map('name'),
+              )}\n\n`,
+          )
+          res()
+        })
+        .run()
+  })
+};
+
+const bench4 = async () => {
+  const suite = new Suite('mergeMap.toString#lottie')
+  const transformedMap = fs.readFileSync(
+      path.resolve(__dirname, './fixtures/lottie/lottie.es.js.map'),
+      'utf-8',
+  )
+  const minifiedMap = fs.readFileSync(
+      path.resolve(__dirname, './fixtures/lottie/lottie.es.min.js.map'),
+      'utf-8',
+  )
+
+  return new Promise<void>((res) => {
+    suite
+        .add('lottie#@speedy-js/source-map - parallel', () => {
+          SourceMap.mergeMaps([minifiedMap, transformedMap]).toMap()
+        })
+        .add(
+            'lottie#@speedy-js/remapping',
+            asyncTest(async () => {
+              await remapping([minifiedMap, transformedMap]).toMap()
+            }),
+        )
+        .add('lottie#@ampremapping', () => {
+          ampremapping([minifiedMap, transformedMap], () => null)
+        })
+        .add('lottie#merge-source-map', () => {
+          mergeSourceMap(transformedMap, minifiedMap)
+        })
+        .on('cycle', function (event: Event) {
+          console.info(String(event.target))
+        })
+        .on('complete', function (this: any) {
+          console.info(
+              `${this.name} bench suite: Fastest is ${chalk.green(
+                  this.filter('fastest').map('name'),
+              )}\n\n`,
+          )
+          res()
+        })
+        .run()
+  })
+};
+
 ;(async () => {
   const chainPromise = (promises: (() => Promise<any>)[]) => {
     return promises.reduce(async (prev, now) => {
@@ -110,5 +196,5 @@ const bench2 = async () => {
     }, Promise.resolve())
   }
 
-  chainPromise([bench1, bench2])
+  chainPromise([bench1, bench2, bench3, bench4])
 })()
