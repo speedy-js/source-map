@@ -1,5 +1,7 @@
 #![deny(clippy::all)]
 
+use std::ops::{Deref, DerefMut};
+
 use rayon::prelude::*;
 use speedy_parcel_sourcemap::SourceMap as PSourceMap;
 
@@ -130,6 +132,20 @@ impl SourceMap {
   pub fn generate_string(&mut self) -> Result<String> {
     let raw_map = self.generate_map()?;
     raw_map.to_string()
+  }
+}
+
+impl Deref for SourceMap {
+  type Target = PSourceMap;
+
+  fn deref(&self) -> &Self::Target {
+    &self.inner
+  }
+}
+
+impl DerefMut for SourceMap {
+  fn deref_mut(&mut self) -> &mut Self::Target {
+    &mut self.inner
   }
 }
 
