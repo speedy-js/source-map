@@ -36,6 +36,18 @@ pub struct Vlq {
   pub sources_content: Vec<String>,
 }
 
+pub struct MergeMapOptions {
+  include_contents: bool,
+}
+
+impl Default for MergeMapOptions {
+  fn default() -> Self {
+    Self {
+      include_contents: true
+    }
+  }
+}
+
 impl SourceMap {
   /// Create a new Speedy SourceMap instance
   pub fn new(source_root: &str) -> Self {
@@ -62,7 +74,8 @@ impl SourceMap {
   }
 
   /// Merge SourceMaps from given vlq mappings
-  pub fn merge_maps(vlq_maps: &[&VlqMap]) -> Result<Self> {
+  pub fn merge_maps(vlq_maps: &[&VlqMap], options: MergeMapOptions) -> Result<Self> {
+    let include_contents = options.include_contents;
     let len = vlq_maps.len();
     assert!(len > 0);
 
@@ -101,6 +114,10 @@ impl SourceMap {
         Ok(map.take().unwrap())
       },
     )?;
+
+    // parcel_sourcemap.get_sources().iter().enumerate().filter_map(|(idx, item)| {
+    //
+    // });
 
     Ok(Self::new_from_parcel_sourcemap(parcel_sourcemap))
   }
