@@ -11,6 +11,7 @@ pub struct RawSourceMap {
   pub version: u8,
   pub mappings: String,
   pub names: Vec<String>,
+  #[serde(default)]
   pub sources: Vec<Option<String>>,
   pub sources_content: Vec<Option<String>>,
   pub file: Option<String>,

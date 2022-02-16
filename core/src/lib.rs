@@ -105,6 +105,18 @@ impl SourceMap {
     Ok(Self::new_from_parcel_sourcemap(parcel_sourcemap))
   }
 
+  pub fn set_source_content(&mut self, source_index: usize, source_content: &str) -> Result<()> {
+    Ok(
+      self
+        .inner
+        .set_source_content(source_index, source_content)?,
+    )
+  }
+
+  pub fn get_source_content(&self, source_index: usize) -> Result<&str> {
+    Ok(self.inner.get_source_content(source_index as u32)?)
+  }
+
   pub fn generate_vlq(&mut self) -> Result<&Vlq> {
     let mut vlq_output: Vec<u8> = vec![];
     self.inner.write_vlq(&mut vlq_output)?;

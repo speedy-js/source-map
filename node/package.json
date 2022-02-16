@@ -56,5 +56,8 @@
   },
   "engines": {
     "node": ">= 10"
+  },
+  "dependencies": {
+    "fast-json": "^2.1.0"
   }
 }

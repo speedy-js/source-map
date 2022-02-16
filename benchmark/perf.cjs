@@ -13,5 +13,5 @@ const minifiedMap = fs.readFileSync(
 
 for (let i = 0; i < 3; i++) {
   const mergeMaps = SourceMap.mergeMaps([minifiedMap, transformedMap])
-  mergeMaps.toMap()
+  mergeMaps.toComment()
 }

@@ -52,7 +52,10 @@ importers:
       '@types/convert-source-map': registry.npmmirror.com/@types/convert-source-map/1.5.2
 
   node:
-    specifiers: {}
+    specifiers:
+      fast-json: ^2.1.0
+    dependencies:
+      fast-json: registry.npmmirror.com/fast-json/2.1.0
 
 packages:
 
@@ -2063,6 +2066,12 @@ packages:
     dev: true
     optional: true
 
+  registry.npmmirror.com/fast-json/2.1.0:
+    resolution: {integrity: sha512-OAapBaPRDCMuW1ZKkD/k42r0wESMIWMpFct2lHV1HageXEk9kASYwXaut4Zsuih9s5r2BBYSFVRjey+Uj/Q91Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fast-json/-/fast-json-2.1.0.tgz}
+    name: fast-json
+    version: 2.1.0
+    dev: false
+
   registry.npmmirror.com/fsevents/2.3.2:
     resolution: {integrity: sha1-ilJveLj99GI7cJ4Ll1xSwkwC/Ro=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fsevents/download/fsevents-2.3.2.tgz}
     name: fsevents
@@ -2074,7 +2083,7 @@ packages:
     optional: true
 
   registry.npmmirror.com/safe-buffer/5.1.2:
-    resolution: {integrity: sha1-mR7GnSluAxN0fVm9/St0XDX4go0=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/safe-buffer/download/safe-buffer-5.1.2.tgz}
+    resolution: {integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/safe-buffer/-/safe-buffer-5.1.2.tgz}
     name: safe-buffer
     version: 5.1.2
     dev: false

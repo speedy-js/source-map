@@ -36,12 +36,6 @@ fn convert_option_vec(s: &Option<Vec<Option<String>>>) -> Vec<&str> {
 
 #[napi]
 impl SourceMap {
-  /// Create Speedy SourceMap from external Sourcemap instance. It's useful when storing cache on Node.js side
-  #[napi(factory)]
-  pub fn new_from_external_sourcemap(external: External<&SpeedySourceMap>) -> Self {
-    Self((*external).clone())
-  }
-
   #[napi(factory, ts_args_type = "vlqMaps: Array<String | VlqMap>")]
   pub fn merge_maps(vlq_jsons: Vec<String>) -> Result<Self> {
     let vlq_maps = vlq_jsons
@@ -76,10 +70,18 @@ impl SourceMap {
     )?))
   }
 
-  /// Convert Speedy SourceMap to External Value which can be stored in Node.js side indefinitely and useful when making mapChains or any caches
   #[napi]
-  pub fn to_external_sourcemap(&self) -> External<&SpeedySourceMap> {
-    create_external(&self.0)
+  pub fn set_source_content(&mut self, source_index: u32, source_content: String) -> Result<()> {
+    Ok(
+      self
+        .0
+        .set_source_content(source_index as usize, source_content.as_str())?,
+    )
+  }
+
+  #[napi]
+  pub fn get_source_content(&self, source_index: u32) -> Result<String> {
+    Ok(self.0.get_source_content(source_index as usize)?.to_owned())
   }
 
   #[napi]
