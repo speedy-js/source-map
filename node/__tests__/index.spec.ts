@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from 'assert'
 import { SourceMap } from '..'
 
 describe('merge', () => {
@@ -23,8 +23,23 @@ describe('merge', () => {
 
     assert.equal(map.version, 3)
 
-    assert.ok(sourcemap.toComment().startsWith("//# sourceMappingURL="))
-    assert.ok(sourcemap.toUrl().startsWith("data:application/json;charset=utf-8;base64,"))
+    assert.ok(sourcemap.toComment().startsWith('//# sourceMappingURL='))
+    assert.ok(
+      sourcemap
+        .toUrl()
+        .startsWith('data:application/json;charset=utf-8;base64,'),
+    )
+    assert.deepEqual(map, {
+      version: 3,
+      mappings: 'A,aCAA,IAAIA,IAAM,WAAA,MAAM',
+      names: ['foo'],
+      sources: ['0', 'unknown'],
+      sourcesContent: [
+        'use strict";\n\nvar foo = function foo() {\n  return "foo";\n};',
+        'let foo = () => "foo";',
+      ],
+      file: null,
+    })
   })
 })
 
@@ -52,4 +67,3 @@ describe('external', () => {
     assert.equal(sourcemap.toString(), sourcemap_external.toString())
   })
 })
-
