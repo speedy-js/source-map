@@ -17,6 +17,7 @@
 node_modules
 yarn-error.log
 dist
+*.cpuprofile
 
 # Node addon
 *.node

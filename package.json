@@ -20,6 +20,7 @@
     "bench": "node -r @swc-node/register benchmark/bench.ts",
     "build": "pnpm build --dir node",
     "format": "prettier . -w",
+    "perf": "node --cpu-prof benchmark/perf.cjs",
     "test": "mocha -r @swc-node/register **/__tests__/**/*.spec.ts"
   },
   "devDependencies": {
