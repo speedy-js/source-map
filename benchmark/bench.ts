@@ -19,13 +19,17 @@ const asyncTest = (fn: () => void) => ({
 
 const bench1 = async () => {
   const suite = new Suite('mergeMap#lottie')
-  const transformedMap = fs.readFileSync(
-    path.resolve(__dirname, './fixtures/lottie/lottie.es.js.map'),
-    'utf-8',
+  const transformedMap = JSON.parse(
+    fs.readFileSync(
+      path.resolve(__dirname, './fixtures/lottie/lottie.es.js.map'),
+      'utf-8',
+    ),
   )
-  const minifiedMap = fs.readFileSync(
-    path.resolve(__dirname, './fixtures/lottie/lottie.es.min.js.map'),
-    'utf-8',
+  const minifiedMap = JSON.parse(
+    fs.readFileSync(
+      path.resolve(__dirname, './fixtures/lottie/lottie.es.min.js.map'),
+      'utf-8',
+    ),
   )
 
   return new Promise<void>((res) => {
@@ -62,13 +66,17 @@ const bench1 = async () => {
 
 const bench2 = async () => {
   const suite = new Suite('mergeMap#antd')
-  const transformedMap = fs.readFileSync(
-    path.resolve(__dirname, './fixtures/antd/antd.js.map'),
-    'utf-8',
+  const transformedMap = JSON.parse(
+    fs.readFileSync(
+      path.resolve(__dirname, './fixtures/antd/antd.js.map'),
+      'utf-8',
+    ),
   )
-  const minifiedMap = fs.readFileSync(
-    path.resolve(__dirname, './fixtures/antd/antd.min.js.map'),
-    'utf-8',
+  const minifiedMap = JSON.parse(
+    fs.readFileSync(
+      path.resolve(__dirname, './fixtures/antd/antd.min.js.map'),
+      'utf-8',
+    ),
   )
 
   return new Promise<void>((res) => {
@@ -105,13 +113,17 @@ const bench2 = async () => {
 
 const bench3 = async () => {
   const suite = new Suite('mergeMap.toString#lottie')
-  const transformedMap = fs.readFileSync(
-    path.resolve(__dirname, './fixtures/lottie/lottie.es.js.map'),
-    'utf-8',
+  const transformedMap = JSON.parse(
+    fs.readFileSync(
+      path.resolve(__dirname, './fixtures/lottie/lottie.es.js.map'),
+      'utf-8',
+    ),
   )
-  const minifiedMap = fs.readFileSync(
-    path.resolve(__dirname, './fixtures/lottie/lottie.es.min.js.map'),
-    'utf-8',
+  const minifiedMap = JSON.parse(
+    fs.readFileSync(
+      path.resolve(__dirname, './fixtures/lottie/lottie.es.min.js.map'),
+      'utf-8',
+    ),
   )
 
   return new Promise<void>((res) => {
@@ -148,14 +160,14 @@ const bench3 = async () => {
 
 const bench4 = async () => {
   const suite = new Suite('mergeMap.toMap#lottie')
-  const transformedMap = fs.readFileSync(
+  const transformedMap = JSON.parse(fs.readFileSync(
     path.resolve(__dirname, './fixtures/lottie/lottie.es.js.map'),
     'utf-8',
-  )
-  const minifiedMap = fs.readFileSync(
+  ))
+  const minifiedMap = JSON.parse(fs.readFileSync(
     path.resolve(__dirname, './fixtures/lottie/lottie.es.min.js.map'),
     'utf-8',
-  )
+  ))
 
   return new Promise<void>((res) => {
     suite
